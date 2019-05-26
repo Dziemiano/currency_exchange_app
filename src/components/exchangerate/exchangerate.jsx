@@ -1,5 +1,5 @@
 import React from 'react'
-import config from '../config'
+import config from '../../config'
 
 
 
@@ -24,16 +24,14 @@ export default class ExchangeRate extends React.Component {
     fetch(url)
       .then(res => res.json())
       .then(
-        (result) => {
+        result => {
           console.log(result)
           this.setState({
             exRate: Object.values(Object.values(result)[0])[4]
           });
-        },
-        (err) => {
-          this.setState({
-            error: err
-          });
+        })
+      .catch(error => {
+          console.log(error)
         }
       )
     }
@@ -48,7 +46,15 @@ export default class ExchangeRate extends React.Component {
 	render() {
 
 		return (
-			<div>Real Time Exchange Rate: {this.state.exRate}</div>
+			<div className='ex-rate'>
+        <span>Real-time Exchange Rate</span>
+        <h4>{this.state.exRate}</h4>
+        <div>
+        <span>{this.props.firstIso.label}</span>
+        <img src='https://png.pngtree.com/svg/20161110/e9797c679c.png' alt='wtf' height="42" width="42"/>
+        <span>{this.props.secoundIso.label}</span>
+        </div>
+      </div>
 		);
 	}
 }
