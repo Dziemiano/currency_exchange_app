@@ -1,3 +1,7 @@
+::-webkit-scrollbar { 
+    display: none; 
+}
+
 .App {
   text-align: center;
   max-height: 100vh;
@@ -10,7 +14,7 @@
   margin: 1rem;
   padding: 1rem;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: space-eve;
   align-items: center;
   display: flex;
   border-color: black;
@@ -50,8 +54,8 @@
   margin: 5px;
 }
 
-.p-dropdown-panel {
-  height: 10em;
+.p-dropdown-items-wrapper {
+  height: 10vh;
   overflow: scroll;
 }
 

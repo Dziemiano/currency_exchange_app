@@ -7,6 +7,7 @@ export default class ChartComp extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			dataType : 'daily',
 			dateRange: 0,
 			years: 0,
 			hideChart: true,
@@ -64,7 +65,8 @@ export default class ChartComp extends React.Component {
 
 	handleClick = (e) => {
 		this.setState({
-			dateRange: parseInt(e.target.value)
+			dataType: e.target.value,
+			dateRange: parseInt(e.target.dataset.range)
 		})
 	}
 
@@ -83,10 +85,10 @@ export default class ChartComp extends React.Component {
 
 		if (!this.state.hideChart) {
 			console.log(this.state.intradayError)
-			if (this.state.intradayError !== "Error Message") {
+			if (this.state.intradayError !== "Error Message" && this.state.dataType === 'intra') {
 			values = Object.values(this.state.intradayData[`Time Series FX (30min)`]).map((e,i) => parseFloat(e['1. open'])).reverse()
 			labels = Object.keys(this.state.intradayData[`Time Series FX (30min)`]).reverse()
-			} else if (this.state.dailyError !== "Error Message") {
+			} else if (this.state.dailyError !== "Error Message" && this.state.dataType === 'daily') {
 			values = Object.values(this.state.dailyData[`Time Series FX (Daily)`]).map((e,i) => parseFloat(e['1. open'])).reverse()
 			labels = Object.keys(this.state.dailyData[`Time Series FX (Daily)`]).reverse()
 			}
@@ -96,6 +98,7 @@ export default class ChartComp extends React.Component {
 			}
 		}
 
+		console.log(this.state.dateRange)
 
 		let data2 = [['x','Rate'], ...data.slice(-this.state.dateRange)]
 
@@ -118,8 +121,8 @@ export default class ChartComp extends React.Component {
 
 		if (this.state.intradayError !== "Error Message") {
 			intradayButtons = [
-				<button type='button' value='8' className='btn btn-info' onClick={this.handleClick}>12H</button>,
-				<button type='button' value='31' className='btn btn-info' onClick={this.handleClick}>1D</button>,
+				<button type='button' value='intra' data-range='8' className='btn btn-info' onClick={this.handleClick}>12H</button>,
+				<button type='button' value='intra' data-range='31' className='btn btn-info' onClick={this.handleClick}>1D</button>,
 			]
 		}
 
@@ -128,25 +131,25 @@ export default class ChartComp extends React.Component {
 		if (this.state.dailyError !== "Error Message") {
 		if (this.state.years >= 10) {
 			dailyButtons = [
-				<button type='button' value='8' className='btn btn-info' onClick={this.handleClick}>1W</button>,
-				<button type='button' value='31' className='btn btn-info' onClick={this.handleClick}>1M</button>,
-				<button type='button' value='366' className='btn btn-info' onClick={this.handleClick}>1Y</button>,
-				<button type='button' value='732' className='btn btn-info' onClick={this.handleClick}>2Y</button>,
-				<button type='button' value='1830' className='btn btn-info' onClick={this.handleClick}>5Y</button>,
-				<button type='button' value='3660' className='btn btn-info' onClick={this.handleClick}>10Y</button>]
+				<button type='button' value='daily' data-range='9' className='btn btn-info' onClick={this.handleClick}>1W</button>,
+				<button type='button' value='daily' data-range='32' className='btn btn-info' onClick={this.handleClick}>1M</button>,
+				<button type='button' value='daily' data-range='366' className='btn btn-info' onClick={this.handleClick}>1Y</button>,
+				<button type='button' value='daily' data-range='732' className='btn btn-info' onClick={this.handleClick}>2Y</button>,
+				<button type='button' value='daily' data-range='1830' className='btn btn-info' onClick={this.handleClick}>5Y</button>,
+				<button type='button' value='daily' data-range='3660' className='btn btn-info' onClick={this.handleClick}>10Y</button>]
 		} else if (this.state.years >= 5) {
 			dailyButtons = [
-				<button type='button' value='8' className='btn btn-info' onClick={this.handleClick}>1W</button>,
-				<button type='button' value='31' className='btn btn-info' onClick={this.handleClick}>1M</button>,
-				<button type='button' value='366' className='btn btn-info' onClick={this.handleClick}>1Y</button>,
-				<button type='button' value='732' className='btn btn-info' onClick={this.handleClick}>2Y</button>,
-				<button type='button' value='1830' className='btn btn-info' onClick={this.handleClick}>5Y</button>,]
+				<button type='button' value='daily' data-range='9' className='btn btn-info' onClick={this.handleClick}>1W</button>,
+				<button type='button' value='daily' data-range='32' className='btn btn-info' onClick={this.handleClick}>1M</button>,
+				<button type='button' value='daily' data-range='366' className='btn btn-info' onClick={this.handleClick}>1Y</button>,
+				<button type='button' value='daily' data-range='732' className='btn btn-info' onClick={this.handleClick}>2Y</button>,
+				<button type='button' value='daily' data-range='1830' className='btn btn-info' onClick={this.handleClick}>5Y</button>,]
 		} else if (this.state.years >= 2) {
 			dailyButtons = [
-				<button type='button' value='8' className='btn btn-info' onClick={this.handleClick}>1W</button>,
-				<button type='button' value='31' className='btn btn-info' onClick={this.handleClick}>1M</button>,
-				<button type='button' value='366' className='btn btn-info' onClick={this.handleClick}>1Y</button>,
-				<button type='button' value='732' className='btn btn-info' onClick={this.handleClick}>2Y</button>,
+				<button type='button' value='daily' data-range='9' className='btn btn-info' onClick={this.handleClick}>1W</button>,
+				<button type='button' value='daily' data-range='32' className='btn btn-info' onClick={this.handleClick}>1M</button>,
+				<button type='button' value='daily' data-range='366' className='btn btn-info' onClick={this.handleClick}>1Y</button>,
+				<button type='button' value='daily' data-range='732' className='btn btn-info' onClick={this.handleClick}>2Y</button>,
 			]
 		}
 		}
