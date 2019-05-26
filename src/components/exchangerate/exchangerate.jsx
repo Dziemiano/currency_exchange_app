@@ -16,45 +16,42 @@ export default class ExchangeRate extends React.Component {
 
   getData = () => {
 
-	const apiKey = config.API_KEY
+    const apiKey = config.API_KEY
 
-  if (this.props.firstIso !== "" && this.props.secoundIso !== "") {
-  let url = `https://www.alphavantage.co/query?function=CURRENCY_EXCHANGE_RATE&from_currency=${this.props.firstIso.label}&to_currency=${this.props.secoundIso.label}&apikey= ${apiKey}`
+    if (this.props.firstIso !== "" && this.props.secoundIso !== "") {
+      let url = `https://www.alphavantage.co/query?function=CURRENCY_EXCHANGE_RATE&from_currency=${this.props.firstIso.label}&to_currency=${this.props.secoundIso.label}&apikey= ${apiKey}`
 
-    fetch(url)
+      fetch(url)
       .then(res => res.json())
-      .then(
-        result => {
-          console.log(result)
-          this.setState({
-            exRate: Object.values(Object.values(result)[0])[4]
-          });
+      .then(result => {
+        this.setState({
+          exRate: Object.values(Object.values(result)[0])[4]
         })
+      })
       .catch(error => {
-          console.log(error)
-        }
-      )
+        console.log(error)
+      })
     }
   }
 
-  	componentDidUpdate(prevProps) {
-      if (this.props.firstIso !== prevProps.firstIso || this.props.secoundIso !== prevProps.secoundIso) {
-        this.getData();
-      }
+  componentDidUpdate(prevProps) {
+    if (this.props.firstIso !== prevProps.firstIso || this.props.secoundIso !== prevProps.secoundIso) {
+      this.getData()
     }
+  }
 
-	render() {
+  render() {
 
-		return (
-			<div className='ex-rate'>
+    return (
+      <div className='ex-rate'>
         <span>Real-time Exchange Rate</span>
         <h4>{this.state.exRate}</h4>
         <div>
-        <span>{this.props.firstIso.label}</span>
-        <img src='https://png.pngtree.com/svg/20161110/e9797c679c.png' alt='wtf' height="42" width="42"/>
-        <span>{this.props.secoundIso.label}</span>
+          <span className='iso'>{this.props.firstIso.label}</span>
+          <img src='https://png.pngtree.com/svg/20161110/e9797c679c.png' alt='wtf' height="42" width="42"/>
+          <span className='iso'>{this.props.secoundIso.label}</span>
         </div>
       </div>
-		);
-	}
+    )
+  }
 }
