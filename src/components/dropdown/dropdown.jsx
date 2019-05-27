@@ -51,8 +51,6 @@ export default class Dropdowns extends React.Component {
             <Dropdown value={this.props.toCur} options={this.state.curIso} 
               onChange={this.selectToCurrency} placeholder='Select Currency' optionLabel="label"/>
             </div>
-         )
-		
-		
+         )	
 	}
 }

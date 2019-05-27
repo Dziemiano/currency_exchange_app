@@ -38,12 +38,9 @@ export default class ChartComp extends React.Component {
 			fetch(dailyUrl)
 			.then(res => res.json())
 
-
 			Promise.all([firstPromise, secoundPromise])
 			.then(
 				([data1, data2]) => {
-					console.log(Object.keys(data1))
-					console.log(data2)
 					this.setState({
 						intradayData: data1,
 						intradayError: Object.keys(data1)[0],
@@ -53,13 +50,7 @@ export default class ChartComp extends React.Component {
 						hideChart: false
 					});
 				})
-			.catch(error => {
-				console.log(error)
-				this.setState({
-					hideChart: true
-				})
-			}
-			)
+			.catch(error => { this.setState({ hideChart: true }) })
 		}
 	}
 
@@ -71,9 +62,9 @@ export default class ChartComp extends React.Component {
 	}
 
 	componentDidUpdate(prevProps, prevState) {
-
 		if (this.props.firstIso !== prevProps.firstIso || this.props.secoundIso !== prevProps.secoundIso){
-			this.getData();			
+			if (this.timeoutFetch) clearTimeout(this.timeoutFetch)
+			this.timeoutFetch = setTimeout(() => this.getData(), 5000);			
 		}
 	}
 
@@ -82,93 +73,88 @@ export default class ChartComp extends React.Component {
 		let labels = []
 		let values = []
 		let data = []
+		let intradayButtons = []
+		let dailyButtons = []
+		let allButtons = []
+		const chartOptions =  {
+			title: 'Historical Exchange Rate',
+			chartArea: { width: '85%', height: '70%' },
+			trendlines: {
+				0: {
+					type: 'linear',
+					color: 'green',
+					lineWidth: 3,
+					opacity: 0.3,
+					showR2: true,
+					visibleInLegend: true
+				}
+			}			
+		}
 
-		if (!this.state.hideChart) {
-			console.log(this.state.intradayError)
-			if (this.state.intradayError !== "Error Message" && this.state.dataType === 'intra') {
-			values = Object.values(this.state.intradayData[`Time Series FX (30min)`]).map((e,i) => parseFloat(e['1. open'])).reverse()
-			labels = Object.keys(this.state.intradayData[`Time Series FX (30min)`]).reverse()
+		if (!this.state.hideChart) {			
+			if (this.state.intradayError !== ("Error Message" || "Note") && this.state.dataType === 'intra') {
+				values = Object.values(this.state.intradayData[`Time Series FX (30min)`]).map((e,i) => parseFloat(e['1. open'])).reverse()
+				labels = Object.keys(this.state.intradayData[`Time Series FX (30min)`]).reverse()
 			} else if (this.state.dailyError !== "Error Message" && this.state.dataType === 'daily') {
-			values = Object.values(this.state.dailyData[`Time Series FX (Daily)`]).map((e,i) => parseFloat(e['1. open'])).reverse()
-			labels = Object.keys(this.state.dailyData[`Time Series FX (Daily)`]).reverse()
+				values = Object.values(this.state.dailyData[`Time Series FX (Daily)`]).map((e,i) => parseFloat(e['1. open'])).reverse()
+				labels = Object.keys(this.state.dailyData[`Time Series FX (Daily)`]).reverse()
 			}
 
 			for (let i = 0; i < values.length; i++) {
 				data.push([labels[i], values[i]])
 			}
+
+			data = [['x','Rate'], ...data.slice(-this.state.dateRange)]
 		}
-
-		console.log(this.state.dateRange)
-
-		let data2 = [['x','Rate'], ...data.slice(-this.state.dateRange)]
-
-		const options =  {
-			trendlines: {
-    			0: {
-      			type: 'linear',
-      			color: 'green',
-      			lineWidth: 3,
-      			opacity: 0.3,
-      			showR2: true,
-      			visibleInLegend: true
-    			}
-  			}			
-		}
-
-		let intradayButtons = []
-		let dailyButtons = []
-		let allButtons = []
 
 		if (this.state.intradayError !== "Error Message") {
-			intradayButtons = [
-				<button type='button' value='intra' data-range='8' className='btn btn-info' onClick={this.handleClick}>12H</button>,
-				<button type='button' value='intra' data-range='31' className='btn btn-info' onClick={this.handleClick}>1D</button>,
-			]
-		}
+			for (let i=0; i < 3; i++) {			
+				let range = 0
+				let placeholder = ''
+				
+				if (i === 0) {
+					placeholder = '12H'
+					range = 25
+				} else if (i === 1) {
+					placeholder = '1D'
+					range = 50
+				} else {
+					placeholder = '1W'
+					range = 400
+				}
 
-		console.log(this.state.years)
+				intradayButtons.push(<button type='button' key={i+20} value='intra' data-range={range} className='btn btn-info' onClick={this.handleClick}>{placeholder}</button>)
+			}			
+		}
 
 		if (this.state.dailyError !== "Error Message") {
-		if (this.state.years >= 10) {
-			dailyButtons = [
-				<button type='button' value='daily' data-range='9' className='btn btn-info' onClick={this.handleClick}>1W</button>,
-				<button type='button' value='daily' data-range='32' className='btn btn-info' onClick={this.handleClick}>1M</button>,
-				<button type='button' value='daily' data-range='366' className='btn btn-info' onClick={this.handleClick}>1Y</button>,
-				<button type='button' value='daily' data-range='732' className='btn btn-info' onClick={this.handleClick}>2Y</button>,
-				<button type='button' value='daily' data-range='1830' className='btn btn-info' onClick={this.handleClick}>5Y</button>,
-				<button type='button' value='daily' data-range='3660' className='btn btn-info' onClick={this.handleClick}>10Y</button>]
-		} else if (this.state.years >= 5) {
-			dailyButtons = [
-				<button type='button' value='daily' data-range='9' className='btn btn-info' onClick={this.handleClick}>1W</button>,
-				<button type='button' value='daily' data-range='32' className='btn btn-info' onClick={this.handleClick}>1M</button>,
-				<button type='button' value='daily' data-range='366' className='btn btn-info' onClick={this.handleClick}>1Y</button>,
-				<button type='button' value='daily' data-range='732' className='btn btn-info' onClick={this.handleClick}>2Y</button>,
-				<button type='button' value='daily' data-range='1830' className='btn btn-info' onClick={this.handleClick}>5Y</button>,]
-		} else if (this.state.years >= 2) {
-			dailyButtons = [
-				<button type='button' value='daily' data-range='9' className='btn btn-info' onClick={this.handleClick}>1W</button>,
-				<button type='button' value='daily' data-range='32' className='btn btn-info' onClick={this.handleClick}>1M</button>,
-				<button type='button' value='daily' data-range='366' className='btn btn-info' onClick={this.handleClick}>1Y</button>,
-				<button type='button' value='daily' data-range='732' className='btn btn-info' onClick={this.handleClick}>2Y</button>,
-			]
-		}
+			for (let i = 0; i < this.state.years; i++ ) {			
+				let range = 340*(i+1)
+				let placeholder = `${i+1}Y`
+				
+				if (i === 0) {
+					placeholder = '1M'
+					range /= 10
+				}
+				
+				dailyButtons.push(<button type='button' key={i} value='daily' data-range={range} className='btn btn-info' onClick={this.handleClick}>{placeholder}</button>)
+			}
 		}
 
 		allButtons = [...intradayButtons, ...dailyButtons]
 
 		return (
-
 			!this.state.hideChart ? (
 				<div className='chart'>
-			
+
 				<Chart
-  					width={'100%'}
-					height={'60vh'}
-					chartType="LineChart"
-					loader={<div>Loading Chart</div>}
-					data={[['x','Rate'], ...data.slice(-this.state.dateRange)]}
-					options= {options}
-					rootProps={{ 'data-testid': '1' }}
+				width={'100%'}
+				height={'60vh'}
+				chartType="AreaChart"
+				loader={<div>Loading Chart</div>}
+				data={data}
+				options= {chartOptions}
+				rootProps={{ 'data-testid': '1' }}
 				/>
 
 				{allButtons}
@@ -176,7 +162,7 @@ export default class ChartComp extends React.Component {
 				</div>
 				) : (
 				<div></div>	
-				)
+			)
 		)
 	}
 }

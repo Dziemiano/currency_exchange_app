@@ -51,7 +51,8 @@
 }
 
 .btn {
-  margin: 5px;
+  margin: 0.5rem;
+  margin-top: 2rem;
 }
 
 .p-dropdown-items-wrapper {
