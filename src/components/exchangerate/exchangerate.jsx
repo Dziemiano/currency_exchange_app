@@ -1,15 +1,10 @@
 import React from 'react'
 import config from '../../config'
 
-
-
 export default class ExchangeRate extends React.Component {
 	constructor(props) {
 		super(props)
-		this.state = {
-			exRate: "",
-			error: null,
-		}
+		this.state = { exRate: "" }
 	}
 
   getData = () => {
@@ -20,14 +15,8 @@ export default class ExchangeRate extends React.Component {
 
       fetch(url)
       .then(res => res.json())
-      .then(result => {
-        this.setState({
-          exRate: Object.values(Object.values(result)[0])[4]
-        })
-      })
-      .catch(error => {
-        console.log(error)
-      })
+      .then(result => { this.setState({ exRate: Object.values(Object.values(result)[0])[4] }) })
+      .catch(error => { console.log(error) })
     }
   }
 
