@@ -1,4 +1,4 @@
-#Currency exchange app
+# Currency exchange app
 
 Done with total front-end aproach, but focused on logic rather than looks.
 
