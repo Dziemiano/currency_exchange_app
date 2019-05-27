@@ -12,11 +12,8 @@ export default class ExchangeRate extends React.Component {
 		}
 	}
 
-
-
   getData = () => {
-
-    const apiKey = config.API_KEY
+     const apiKey = config.API_KEY
 
     if (this.props.firstIso !== "" && this.props.secoundIso !== "") {
       let url = `https://www.alphavantage.co/query?function=CURRENCY_EXCHANGE_RATE&from_currency=${this.props.firstIso.label}&to_currency=${this.props.secoundIso.label}&apikey= ${apiKey}`
@@ -34,14 +31,14 @@ export default class ExchangeRate extends React.Component {
     }
   }
 
-  componentDidUpdate(prevProps) {
-    if (this.props.firstIso !== prevProps.firstIso || this.props.secoundIso !== prevProps.secoundIso) {
-      this.getData()
+  componentDidUpdate(prevProps, prevState) {
+    if (this.props.firstIso !== prevProps.firstIso || this.props.secoundIso !== prevProps.secoundIso){
+      if (this.timeoutFetch) clearTimeout(this.timeoutFetch)
+      this.timeoutFetch = setTimeout(() => this.getData(), 2000);     
     }
   }
 
   render() {
-
     return (
       <div className='ex-rate'>
         <span>Real-time Exchange Rate</span>
