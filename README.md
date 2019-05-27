@@ -9,7 +9,8 @@ Other than that, future builds should have some backend to manage API calls and 
 Issues i'm aware of :
 	- setTimeout() on data fetch: have to test it more to check what time value works best with API calls limit
 	- lack of loading indicator: should display loading when data is fetched for proper UX (!important)  
-	- xAxis labels and grid lines: managed to format chart input data to show grid lines but gave it up for proper labels, thats 	react-google-charts configuration issue   
+	- xAxis labels and grid lines: managed to format chart input data to show grid lines but gave it up for proper labels, thats 	react-google-charts configuration issue 
+	- years value: needs upgrade  
 
 
 
